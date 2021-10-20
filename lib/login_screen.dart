@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_one/blocs/login/login_bloc.dart';
+import 'package:task_one/blocs/login/login_state.dart';
 import 'package:task_one/register_screen.dart';
+
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,13 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   bool hidePasswod = true;
-  // @override
-  // void initState() {
-  //   loginBloc.add(LoginInWithEmailButtonPressed(
-  //       email: "emailController.text", password: "passController.text"));
-  //   super.initState();
-  // }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,48 +143,107 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 15,
               ),
               BlocBuilder<LoginBloc, LoginState>(
-                  builder: (BuildContext context, LoginState state) {
-                bloc:
-                loginBloc;
-                if (state is LoginProgress) {
-                  const CircularProgressIndicator();
-                } else if (state is LoginFailed) {
-                  // ignore: deprecated_member_use
-                  // Scaffold.of(context).showSnackBar(
-                  //   const SnackBar(
-                  //     content: Text('Invalid Password'),
-                  //     backgroundColor: Colors.red,
-                  //   ),
-                  // );
-                }
+                  bloc: loginBloc,
+                  builder: (context, state) {
+                    if (state is LoginProgress) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is LoginSuccess) {}
+                    if (state is LoginFailed) {
+                      return const Center(
+                        child: Text("error"),
+                      );
+                    }
+                    return Container();
+                  }),
+              BlocListener<LoginBloc, LoginState>(
+                  bloc: loginBloc,
+                  listener: (context, state) {
+                    if (state is LoginSuccess) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+                    }
+                  }),
+              Container(),
+              ElevatedButton(
+                onPressed: () {
+                  loginBloc.add(LogInButton(
+                      email: emailController.text,
+                      password: passController.text));
+                },
 
-                return ElevatedButton(
-                  onPressed: () {
-                    loginBloc.add(LoginInWithEmailButtonPressed(
-                        email: emailController.text,
-                        password: passController.text));
-                    // _formKey.currentState!.save();
-                    // loginBloc.add(LoginInWithEmailButtonPressed(
-                    //     email: emailController.text,
-                    //     password: passController.text));
-                    // if (_formKey.currentState.validate())) {
-                    //   loginBloc.add(LoginInWithEmailButtonPressed(
-                    //       email: emailController.text,
-                    //       password: passController.text));
-                    // }
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text('          Continue with Email           ',
-                        style: TextStyle(fontSize: 15)),
-                  ),
-                  //  color: Colors.green,
-                  // textColor: Colors.white,
-                  //  elevation: 0,
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(30.0),
-                );
-              }),
+                // {
+                //   loginBloc.add(LoginInWithEmailButtonPressed(
+                //       email: emailController.text,
+                //       password: passController.text));
+                //   // _formKey.currentState!.save();
+                //   // loginBloc.add(LoginInWithEmailButtonPressed(
+                //   //     email: emailController.text,
+                //   //     password: passController.text));
+                //   // if (_formKey.currentState.validate())) {
+                //   //   loginBloc.add(LoginInWithEmailButtonPressed(
+                //   //       email: emailController.text,
+                //   //       password: passController.text));
+                //   // }
+                // },
+                child: const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text('  Continue with Email     ',
+                      style: TextStyle(fontSize: 15)),
+                ),
+                //  color: Colors.green,
+                // textColor: Colors.white,
+                //  elevation: 0,
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(30.0),
+              )
+
+              // BlocBuilder(
+              //     bloc: loginBloc,
+              //     builder: (BuildContext context, state) {
+              //       if (state is LoginProgress) {
+              //         const CircularProgressIndicator();
+              //       } else if (state is LoginFailed) {
+              //         // ignore: deprecated_member_use
+              //         // Scaffold.of(context).showSnackBar(
+              //         //   const SnackBar(
+              //         //     content: Text('Invalid Password'),
+              //         //     backgroundColor: Colors.red,
+              //         //   ),
+              //         // );
+              //       }
+
+              //       return ElevatedButton(
+              //         onPressed: () {
+              //           loginBloc.add(LoginInWithEmailButtonPressed(
+              //               email: emailController.text,
+              //               password: passController.text));
+              //           // _formKey.currentState!.save();
+              //           // loginBloc.add(LoginInWithEmailButtonPressed(
+              //           //     email: emailController.text,
+              //           //     password: passController.text));
+              //           // if (_formKey.currentState.validate())) {
+              //           //   loginBloc.add(LoginInWithEmailButtonPressed(
+              //           //       email: emailController.text,
+              //           //       password: passController.text));
+              //           // }
+              //         },
+              //         child: const Padding(
+              //           padding: EdgeInsets.all(20.0),
+              //           child: Text('          Continue with Email           ',
+              //               style: TextStyle(fontSize: 15)),
+              //         ),
+              //         //  color: Colors.green,
+              //         // textColor: Colors.white,
+              //         //  elevation: 0,
+              //         //   shape: RoundedRectangleBorder(
+              //         //     borderRadius: BorderRadius.circular(30.0),
+              //       );
+              //     }),
               //       if (state is LoginProgress) {
               //         const CircularProgressIndicator();
               //       } else if (state is LoginFailed) {
@@ -251,49 +307,50 @@ class _LoginScreenState extends State<LoginScreen> {
 
               //       // return widget here based on BlocA's state
               //     }),
-              SizedBox(
-                height: 25,
-                child: Row(
-                  children: [
-                    // padding: EdgeInsets.only(left: 15, right: 15),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Column(
-                          children: const [
-                            Divider(
-                                height: 20, thickness: 1, color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                    ),
+              ,
+              // SizedBox(
+              //   height: 25,
+              //   child: Row(
+              //     children: [
+              //       // padding: EdgeInsets.only(left: 15, right: 15),
+              //       Expanded(
+              //         child: Padding(
+              //           padding: const EdgeInsets.only(left: 8.0),
+              //           child: Column(
+              //             children: const [
+              //               Divider(
+              //                   height: 20, thickness: 1, color: Colors.grey),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Column(
-                        children: const [
-                          Text(
-                            "OR",
-                            style: TextStyle(color: Colors.grey, fontSize: 15),
-                          )
-                        ],
-                      ),
-                    ),
+              //       Padding(
+              //         padding: const EdgeInsets.only(left: 10, right: 10),
+              //         child: Column(
+              //           children: const [
+              //             Text(
+              //               "OR",
+              //               style: TextStyle(color: Colors.grey, fontSize: 15),
+              //             )
+              //           ],
+              //         ),
+              //       ),
 
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        child: Column(
-                          children: const [
-                            Divider(
-                                height: 20, thickness: 1, color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //       Expanded(
+              //         child: Container(
+              //           margin: const EdgeInsets.only(right: 10),
+              //           child: Column(
+              //             children: const [
+              //               Divider(
+              //                   height: 20, thickness: 1, color: Colors.grey),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               SizedBox(
                 height: 100,
                 width: 550,

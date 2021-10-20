@@ -1,30 +1,28 @@
-// ignore: import_of_legacy_library_into_null_safe
-part of 'login_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState();
 }
 
-class LoginInitial extends LoginState {
+class LoginInInitial extends LoginState {
   @override
   // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object?> get props => throw UnimplementedError();
 }
 
 class LoginProgress extends LoginState {
   @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object?> get props => throw UnimplementedError();
 }
 
 class LoginSuccess extends LoginState {
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
 
 class LoginFailed extends LoginState {
+  const LoginFailed();
+
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
